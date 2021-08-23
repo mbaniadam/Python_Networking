@@ -34,7 +34,7 @@ else:
     print ('There is no err-disabled interface caused by MAC address')
 
 print("All disabled interfaces are recoverd!")
-print("----------------- End -----------------")
+print("----------------- End ----------------")
 
 
 
