@@ -97,9 +97,9 @@ def _loading():
 print('Please enter Device IP address: ')
 host = (str(input()))
 print('Please enter your username: ')
-# get_username = (str(input()))
-# get_pass = getpass.getpass(prompt='Please enter your password: ', stream=None) 
-network_devices = [{'host':host,'username':'m.baniadam','password':'mori@2020','device_type':'cisco_ios'}]
+get_username = (str(input()))
+get_pass = getpass.getpass(prompt='Please enter your password: ', stream=None) 
+network_devices = [{'host':host,'username':get_username,'password':get_pass,'device_type':'cisco_ios'}]
 
 get_ports(network_devices)
 print("\n-------------------------- End --------------------------")
