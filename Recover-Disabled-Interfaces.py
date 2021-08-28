@@ -15,16 +15,14 @@ def get_ports(network_devices):
             Connect_to_device.enable()
             find_err_ints = Connect_to_device.send_command('Show interface status err-disabled')
             print(find_err_ints)
-            if find_err_ints:
-                for interface in find_err_ints.splitlines():
-                    if 'psecure-violation' in interface:
-                        print ('\n----------- Found disabled interface cause of "p-secure" -----------')
-                        _connect_fix_print_psecure_ports(interface, Connect_to_device)
-                    elif 'bpduguard' in interface:
-                        print ('\n\n\n----------- Found disabled interface cause of "bpduguard" -----------')
-                        _connect_fix_print_bpduguard_ports(interface, Connect_to_device)
-            else:
-                print('cannot find any err-disabled interfaces')        
+            #if find_err_ints:
+            for interface in find_err_ints.splitlines():
+                if 'psecure-violation' in interface:
+                    print ('\n----------- Found disabled interface cause of "p-secure" -----------')
+                    _connect_fix_print_psecure_ports(interface, Connect_to_device)
+                elif 'bpduguard' in interface:
+                    print ('\n\n\n----------- Found disabled interface cause of "bpduguard" -----------')
+                    _connect_fix_print_bpduguard_ports(interface, Connect_to_device)      
         except (ssh_exception.AuthenticationException, EOFError):
                 print(f'Authentication Error Device: {host} . Authentication Error')
         except ssh_exception.NetmikoTimeoutException:
@@ -58,7 +56,6 @@ def _connect_fix_print_bpduguard_ports(interface, Connect_to_device):
 def _connect_fix_print_psecure_ports(interface, Connect_to_device):
     """Connects to device, clears and prints results"""
     try:
-        #if "Port" not in interface:
             try:
                 Connect_to_device.send_command(f'clear port-security sticky interface {interface.split()[0]}')
                 To_Excecute = Connect_to_device.send_config_set([f'interface {interface.split()[0]}' ,'shut','no shut'])
@@ -67,7 +64,10 @@ def _connect_fix_print_psecure_ports(interface, Connect_to_device):
                 print('interface shutdown and no shutdown')
                 To_Excecute = Connect_to_device.send_command(f'show interfaces {interface.split()[0]} status')
                 if 'err-disabled' in To_Excecute:
-                    print('interface still receiving BPDU packets!')
+                    Connect_to_device.send_command('clear port-security sticky')
+                    print('All Sticky MAC addresses cleared!')
+                    print('\n-------------------------------- interfaces status -------------------------------- ')
+                    print(To_Excecute)
                 else:
                     print('\n-------------------------------- interfaces status -------------------------------- ')
                     print(To_Excecute)
@@ -99,7 +99,10 @@ host = (str(input()))
 print('Please enter your username: ')
 get_username = (str(input()))
 get_pass = getpass.getpass(prompt='Please enter your password: ', stream=None) 
-network_devices = [{'host':host,'username':get_username,'password':get_pass,'device_type':'cisco_ios'}]
+network_devices = [{'host':host,'username':'get_username','password':'get_pass','device_type':'cisco_ios'}]
 
-get_ports(network_devices)
+if get_ports(network_devices):
+    print('All interface recovered!')
+else:   
+    print('There is no err-disabled interface')
 print("\n-------------------------- End --------------------------")
