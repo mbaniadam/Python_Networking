@@ -15,7 +15,6 @@ def get_ports(network_devices):
             Connect_to_device.enable()
             find_err_ints = Connect_to_device.send_command('Show interface status err-disabled')
             print(find_err_ints)
-            #if find_err_ints:
             for interface in find_err_ints.splitlines():
                 if 'psecure-violation' in interface:
                     print ('\n----------- Found disabled interface cause of "p-secure" -----------')
@@ -32,7 +31,6 @@ def get_ports(network_devices):
 def _connect_fix_print_bpduguard_ports(interface, Connect_to_device):
     """Connects to device, clears and prints results"""
     try:
-        #if "Port" not in interface:
             try:
                 To_Excecute = Connect_to_device.send_config_set([f'interface {interface.split()[0]}' ,'shut','no shut'])
                 _loading()
