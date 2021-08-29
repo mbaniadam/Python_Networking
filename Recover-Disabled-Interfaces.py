@@ -65,6 +65,8 @@ def _connect_fix_print_psecure_ports(interface, Connect_to_device):
                 To_Excecute = Connect_to_device.send_command(f'show interfaces {interface.split()[0]} status')
                 if 'err-disabled' in To_Excecute:
                     Connect_to_device.send_command('clear port-security sticky')
+                    Shut_noShut = Connect_to_device.send_config_set([f'interface {interface.split()[0]}' ,'shut','no shut'])
+                    _loading()                    
                     print('All Sticky MAC addresses cleared!')
                     print('\n-------------------------------- interfaces status -------------------------------- ')
                     print(To_Excecute)
