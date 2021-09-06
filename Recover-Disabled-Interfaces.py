@@ -62,9 +62,11 @@ def _connect_fix_print_psecure_ports(interface, Connect_to_device):
                 print('interface shutdown and no shutdown')
                 To_Excecute = Connect_to_device.send_command(f'show interfaces {interface.split()[0]} status')
                 if 'err-disabled' in To_Excecute:
+                    print('MAC address cleared but interface still in err-disabled status! Trying to clear all sticky MAC address ...')
                     Connect_to_device.send_command('clear port-security sticky')
                     Shut_noShut = Connect_to_device.send_config_set([f'interface {interface.split()[0]}' ,'shut','no shut'])
-                    _loading()                    
+                    _loading()
+                    To_Excecute = Connect_to_device.send_command(f'show interfaces {interface.split()[0]} status')
                     print('All Sticky MAC addresses cleared!')
                     print('\n-------------------------------- interfaces status -------------------------------- ')
                     print(To_Excecute)
@@ -91,8 +93,6 @@ def _loading():
         sys.stdout.write("\r" + animation[i % len(animation)])
         sys.stdout.flush()
     print("\n")
-
-
 
 print('Please enter Device IP address: ')
 host = (str(input()))
