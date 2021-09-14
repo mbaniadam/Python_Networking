@@ -93,7 +93,7 @@ def _connect_fix_print_loopback_ports(interface, Connect_to_device):
                 print('interface shutdown and no shutdown')
                 print(To_Excecute)
                 if 'err-disabled' in To_Excecute:
-                    print('Interface still in loopback status! you should check the port!')
+                    print('Interface still in Loopback Error!\nThe source interface receives the keepalive packet that it sent out!')
                 else:
                     To_Excecute = Connect_to_device.send_command(f'show interfaces {interface.split()[0]} status')
                     print(To_Excecute)
