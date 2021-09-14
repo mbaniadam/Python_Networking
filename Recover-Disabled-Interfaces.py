@@ -122,6 +122,7 @@ host = (str(input()))
 print('Please enter your username: ')
 get_username = (str(input()))
 get_pass = getpass.getpass(prompt='Please enter your password: ', stream=None) 
+print('Please Wait...')
 network_devices = [{'host':host,'username':'get_username','password':'get_pass','device_type':'cisco_ios'}]
 
 get_ports(network_devices):
