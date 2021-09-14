@@ -21,7 +21,11 @@ def get_ports(network_devices):
                     _connect_fix_print_psecure_ports(interface, Connect_to_device)
                 elif 'bpduguard' in interface:
                     print ('\n\n\n----------- Found disabled interface cause of "bpduguard" -----------')
-                    _connect_fix_print_bpduguard_ports(interface, Connect_to_device)      
+                    _connect_fix_print_bpduguard_ports(interface, Connect_to_device)
+                elif 'loopback' in interface:
+                    print ('\n\n\n----------- Found disabled interface cause of "loopback" -----------')
+                    _connect_fix_print_loopback_ports(interface, Connect_to_device)
+                          
         except (ssh_exception.AuthenticationException, EOFError):
                 print(f'Authentication Error Device: {host} . Authentication Error')
         except ssh_exception.NetmikoTimeoutException:
@@ -29,7 +33,6 @@ def get_ports(network_devices):
 
 # Function for bpduguard violation
 def _connect_fix_print_bpduguard_ports(interface, Connect_to_device):
-    """Connects to device, clears and prints results"""
     try:
             try:
                 To_Excecute = Connect_to_device.send_config_set([f'interface {interface.split()[0]}' ,'shut','no shut'])
@@ -52,7 +55,6 @@ def _connect_fix_print_bpduguard_ports(interface, Connect_to_device):
 
 # Function for p-secure violation
 def _connect_fix_print_psecure_ports(interface, Connect_to_device):
-    """Connects to device, clears and prints results"""
     try:
             try:
                 Connect_to_device.send_command(f'clear port-security sticky interface {interface.split()[0]}')
@@ -64,7 +66,7 @@ def _connect_fix_print_psecure_ports(interface, Connect_to_device):
                 if 'err-disabled' in To_Excecute:
                     print('MAC address cleared but interface still in err-disabled status!\nTrying to clear all sticky MAC address ...')
                     Connect_to_device.send_command('clear port-security sticky')
-                    Shut_noShut = Connect_to_device.send_config_set([f'interface {interface.split()[0]}' ,'shut','no shut'])
+                    Connect_to_device.send_config_set([f'interface {interface.split()[0]}' ,'shut','no shut'])
                     _loading()
                     To_Excecute = Connect_to_device.send_command(f'show interfaces {interface.split()[0]} status')
                     print('All Sticky MAC addresses cleared!')
@@ -82,6 +84,26 @@ def _connect_fix_print_psecure_ports(interface, Connect_to_device):
     except IndexError:
         pass
 
+# Function for loopback violation
+def _connect_fix_print_loopback_ports(interface, Connect_to_device):
+    try:
+            try:
+                To_Excecute = Connect_to_device.send_config_set([f'interface {interface.split()[0]}' ,'shut','no shut'])
+                _loading()
+                print('interface shutdown and no shutdown')
+                print(To_Excecute)
+                if 'err-disabled' in To_Excecute:
+                    print('Interface still in loopback status! you should check the port!')
+                else:
+                    To_Excecute = Connect_to_device.send_command(f'show interfaces {interface.split()[0]} status')
+                    print(To_Excecute)
+            except ssh_exception.NetmikoTimeoutException:
+                print(f'Could not connect. Reason: Connection Timeout')
+
+    except IndexError:
+        pass
+
+
 #Function for loading
 def _loading():
     print("Working! ")
@@ -94,6 +116,7 @@ def _loading():
         sys.stdout.flush()
     print("\n")
 
+
 print('Please enter Device IP address: ')
 host = (str(input()))
 print('Please enter your username: ')
@@ -101,8 +124,5 @@ get_username = (str(input()))
 get_pass = getpass.getpass(prompt='Please enter your password: ', stream=None) 
 network_devices = [{'host':host,'username':'get_username','password':'get_pass','device_type':'cisco_ios'}]
 
-if get_ports(network_devices):
-    print('All interface recovered!')
-else:   
-    print('There is no err-disabled interface')
+get_ports(network_devices):
 print("\n-------------------------- End --------------------------")
