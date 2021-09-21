@@ -73,6 +73,6 @@ print('Username: ')
 USERNAME = (str(input()))
 PASSWORD = getpass.getpass(prompt='Password: ', stream=None)
 L3_SWITCH = '172.22.10.1'
-IOS_VARS = {'username': 'USERNSME','password': PASSWORD , 'device_type': 'cisco_ios'}
+IOS_VARS = {'username': USERNAME ,'password': PASSWORD , 'device_type': 'cisco_ios'}
 GET_ARP(L3_SWITCH, TARGET_IP,IOS_VARS)
 FILE.close()
