@@ -36,6 +36,10 @@ def FIND_MAC_L2(FOUNDED_MAC,HOST,DEV_VARS):
                 print('----------------------------------------------------------------------------')                   
         else:
             print('Mac address not found in this device!')
+    except (ssh_exception.AuthenticationException, EOFError):
+        print(f'Authentication Error')
+    except ssh_exception.NetmikoTimeoutException:
+        print(f'Connection Timeout')    
     except:
         raise
 #Open JSON file to get list of network devices
