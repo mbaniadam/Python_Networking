@@ -19,7 +19,7 @@ def get_ports(network_devices):
                 if 'psecure-violation' in interface:
                     print ('\n----------- Found disabled interface cause of "p-secure" -----------')
                     _connect_fix_print_psecure_ports(interface, Connect_to_device)
-                elif 'bpduguard' in interface:
+                elif 'bpduguard' or 'dhcp-rate-limit'  in interface:
                     print ('\n\n\n----------- Found disabled interface cause of "bpduguard" -----------')
                     _connect_fix_print_bpduguard_ports(interface, Connect_to_device)
                 elif 'loopback' in interface:
