@@ -19,12 +19,15 @@ def get_ports(network_devices):
                 if 'psecure-violation' in interface:
                     print ('\n----------- Found disabled interface cause of "p-secure" -----------')
                     _connect_fix_print_psecure_ports(interface, Connect_to_device)
-                elif 'bpduguard' or 'dhcp-rate-limit'  in interface:
+                elif 'bpduguard' in interface:
                     print ('\n\n\n----------- Found disabled interface cause of "bpduguard" -----------')
                     _connect_fix_print_bpduguard_ports(interface, Connect_to_device)
                 elif 'loopback' in interface:
                     print ('\n\n\n----------- Found disabled interface cause of "loopback" -----------')
                     _connect_fix_print_loopback_ports(interface, Connect_to_device)
+                elif 'dhcp-rate-limit' in interface:
+                    print ('\n\n\n----------- Found disabled interface cause of "dhcp-rate-limit" -----------')
+                    _connect_fix_print_bpduguard_ports(interface, Connect_to_device)
                           
         except (ssh_exception.AuthenticationException, EOFError):
                 print(f'Authentication Error Device: {host} . Authentication Error')
