@@ -9,3 +9,5 @@ ufw allow 22/tcp
 ufw allow 53300/udp
 ufw allow 10086/tcp
 echo y | ufw enable
+
+s
