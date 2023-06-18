@@ -1,0 +1,11 @@
+sudo apt update 
+sudo apt install wireguard ufw net-tools tcpdump vim -y
+sudo apt install python3 -y
+sudo apt install python3-pip
+sudo apt install git -y
+pip install ifcfg flask flask_qrcode icmplib gunicorn 
+ufw allow 80,443/tcp
+ufw allow 22/tcp
+ufw allow 53300/udp
+ufw allow 10086/tcp
+echo y | ufw enable
